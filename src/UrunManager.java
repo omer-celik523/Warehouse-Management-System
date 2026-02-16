@@ -42,6 +42,11 @@ public class UrunManager {
 
     //depoya yeni ürün kaydı ekler
     public void urunKayitEkle() {
+        //raf sayısı kontrolü
+        if(rafManager.getRafSayisi()==0){
+            System.out.println("HATA! Depoda raf bulunmamaktadır.\nLütfen yeni raf ekleyiniz.\n-Ana menüye yönlendiriliyorsunuz-");
+            return;
+        }
         //GENEL DEPO KONTROLÜ
         if (!urunler.isEmpty() && rafManager.getToplamKapasite() == 0) {
             System.out.println("HATA! ÜRÜN EKLENEMİYOR\nDEPODA YER YOK");
@@ -271,6 +276,11 @@ public class UrunManager {
 
     public void urunEkleme() { // Stok artırma
 
+        //raf sayısı kontrolü
+        if(rafManager.getRafSayisi()==0){
+            System.out.println("HATA! Depoda raf bulunmamaktadır.\nLütfen yeni raf ekleyiniz.\n-Ana menüye yönlendiriliyorsunuz-");
+            return;
+        }
         // GENEL KAPASİTE KONTROLÜ
         if (rafManager.getToplamKapasite() == 0) {
             System.out.println("HATA! DEPODA YER YOK");
@@ -481,6 +491,11 @@ public class UrunManager {
     }
 
     public void urunCikarma() {
+        //raf sayısı komtrolü
+        if(rafManager.getRafSayisi()==0){
+            System.out.println("HATA! Depoda raf bulunmamaktadır.\nLütfen yeni raf ekleyiniz.\n-Ana menüye yönlendiriliyorsunz-");
+            return;
+        }
         if (urunler.isEmpty()) { // Depoda urun yok ise hata mesajı verir
             System.out.println("HATA! Depoda herhangi bir ürün bulunmamaktadır");
             return;
@@ -551,6 +566,11 @@ public class UrunManager {
     }
 
     public void urunTasima() {
+        //raf sayısı kontrolü
+        if(rafManager.getRafSayisi()==0){
+            System.out.println("HATA! Depoda raf bulunmamaktadır.\nLütfen yeni raf ekleyiniz.\n-Ana menüye yönlendiriliyorsunuz-");
+            return;
+        }
         if (urunler.isEmpty()) {
             System.out.println("HATA! Depoda herhangi bir ürün bulunmamaktadır");
             return;
