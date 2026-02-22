@@ -4,56 +4,69 @@ import java.util.Scanner;
 public class Listeleme {
     transient Scanner scanner = new Scanner(System.in);
 
-    public static void tumListeYazdir(List<Urun> urunler) {
-        if(urunler.isEmpty()){
-            System.out.println("HATA! Depoda herhangi bir ürün bulunmamaktadır");
+    public void tumListeYazdir(List<Urun> urunler) {
+        if (urunler == null || urunler.isEmpty()) {
+            System.out.println("HATA! Depoda herhangi bir ürün bulunmamaktadır.");
             return;
         }
-        System.out.println("-Tüm liste yazdırılıyor-");
+
+        System.out.println("\n====================== TÜM ÜRÜN ENVANTERİ ======================");
+        // Konsolda çok şık, hizalı bir tablo görünümü için "printf" (formatlı yazdırma) kullanıyoruz
+        System.out.printf("%-22s | %-15s | %-8s | %-30s\n", "ÜRÜN ADI", "SERİ NO", "STOK", "BULUNDUĞU RAFLAR (DAĞILIM)");
+        System.out.println("----------------------------------------------------------------------------------");
+
         for (Urun u : urunler) {
-            System.out.println("Ürün adı:" + u.getAd() + " ,Seri numarası:" + u.getSeriNo() + " ,Miktar:" + u.getMiktar() + " ,Raf kodu:" + u.getRafKodlariString());
+            System.out.printf("%-22s | %-15s | %-8d | %-30s\n",
+                    u.getAd(), u.getSeriNo(), u.getMiktar(), u.getRafKodlariString());
         }
+        System.out.println("==================================================================================\n");
     }
 
     public void listedeArama(List<Urun> urunler) {
-        if(urunler.isEmpty()){
-            System.out.println("HATA! Depoda herhangi bir ürün bulunmamaktadır");
+        if (urunler == null || urunler.isEmpty()) {
+            System.out.println("HATA! Depoda aranacak herhangi bir ürün bulunmamaktadır.");
             return;
         }
 
+        int hak = 5;
         System.out.print("Aramak istediğiniz ürünün seri numarasını giriniz: ");
         String seriNo = scanner.nextLine();
 
-        Urun bulunanUrun = null;
-        int hak = 5; // 5 deneme hakkı
+        while (hak > 0) {
+            Urun bulunanUrun = null;
 
-        while (bulunanUrun == null) {
-            // Listede ara
-            for(Urun u : urunler) {
-                if(u.getSeriNo().equals(seriNo)) {
+            // Ürünü listede ara
+            for (Urun u : urunler) {
+                // equalsIgnoreCase ile büyük/küçük harf duyarlılığını kaldırdık (Kullanıcı dostu)
+                if (u.getSeriNo().equalsIgnoreCase(seriNo.trim())) {
                     bulunanUrun = u;
                     break;
                 }
             }
 
-            // Bulunamadıysa
-            if (bulunanUrun == null) {
-                hak--; // Hakkı bir azalt
-
-                if (hak == 0) {
-                    System.out.println("\n");
-                    System.out.println("Çok fazla hatalı deneme yaptınız!");
-                    System.out.println("-Ana menüye yönlendiriliyorsunuz-");
-                    return;
-                }
-
-                System.out.println("Girdiğiniz seri numarası hatalıdır.Lütfen tekrar deneyiniz!");
-                System.out.print("Aramak istediğiniz ürünün seri numarasını giriniz: ");
-                seriNo = scanner.nextLine();
+            if (bulunanUrun != null) {
+                // Bulunduysa şık bir "Kart" formatında yazdır ve metottan çık
+                System.out.println("\n✅ ÜRÜN BAŞARIYLA BULUNDU!");
+                System.out.println("--------------------------------------------------");
+                System.out.println("Ürün Adı      : " + bulunanUrun.getAd());
+                System.out.println("Seri Numarası : " + bulunanUrun.getSeriNo());
+                System.out.println("Toplam Stok   : " + bulunanUrun.getMiktar() + " Adet");
+                System.out.println("Raf Dağılımı  : " + bulunanUrun.getRafKodlariString());
+                System.out.println("--------------------------------------------------\n");
+                return;
             }
-        }
 
-        // Bulunduysa yazdır
-        System.out.println("Ürün bilgileri-> Ürün adı:"+ bulunanUrun.getAd()+" ,Seri numarası:"+ bulunanUrun.getSeriNo()+" ,Stok miktarı:"+ bulunanUrun.getMiktar()+" ,Raf kodu:"+ bulunanUrun.getRafKodlariString());
+            // Bulunamadıysa
+            hak--;
+            if (hak == 0) {
+                System.out.println("\n❌ Çok fazla hatalı deneme yaptınız!");
+                System.out.println("- Ana menüye yönlendiriliyorsunuz -");
+                return;
+            }
+
+            System.out.println("HATA! Girdiğiniz seri numarası (" + seriNo + ") sistemde yok. Kalan hakkınız: " + hak);
+            System.out.print("Aramak istediğiniz ürünün seri numarasını tekrar giriniz: ");
+            seriNo = scanner.nextLine();
+        }
     }
 }

@@ -1,91 +1,81 @@
 import java.util.Scanner;
 
 public class MudurManager {
-    private Mudur mudur;
-    private final String DOSYA = "mudur.bin";
+    private MudurDao mudurDao;
     transient Scanner scanner = new Scanner(System.in);
 
     public MudurManager() {
-        this.mudur = DosyaIslemleri.yukle(DOSYA);
+        this.mudurDao = new MudurDao();
     }
 
-    public boolean sistemGiris(RafManager rafManager) {
-        if (this.mudur == null) {
-            return mudurKayit(rafManager);
-        } else {
-            return mudurGiris();
-        }
-    }
-
-    private boolean mudurKayit(RafManager rafManager) {
-        System.out.println("-Kayıt sistemine Hoşgeldiniz-");
-
-        System.out.print("Kullanıcı adı belirleyiniz:");
-        String kullaniciAdi = scanner.nextLine();
-
-        System.out.print("4 basamaklı bir şifre belirleyiniz:");
-        while(!scanner.hasNextInt()){
-            System.out.print("Lütfen geçerli bir sayı giriniz:");
-            scanner.next();
-        }
-        int sifre = scanner.nextInt();
-        while(sifre<1000 || sifre>9999){
-            System.out.print("HATA !Lutfen 4 basamaklı bir sifre giriniz:");
-            while(!scanner.hasNextInt()){
-                System.out.println("Lütfen geçerli bir sayı giriniz");
-                scanner.next();
-            }
-            sifre = scanner.nextInt();
-        }
-
-        // ilk kurulumda raf bilgisi istenir
-        rafManager.ilkKurulum();
-
-        this.mudur = new Mudur(kullaniciAdi, sifre);
-        DosyaIslemleri.kaydet(mudur, DOSYA);
-        System.out.println("Kaydınız başarıyla yapıldı");
-        return true;
-    }
-
-    private boolean mudurGiris() {
-        System.out.println("-Giriş Bölümüne Hoşgeldiniz-");
-        System.out.print("Kullanıcı Adı:");
-        String girilenKAdi = scanner.nextLine();
-
-        System.out.print("Şifre:");
-        while(!scanner.hasNextInt()){
-            System.out.print("Lütfen 4 basamaklı şifrenizi giriniz:");
-            scanner.next();
-        }
-        int girilenSifre = scanner.nextInt();
-        scanner.nextLine();
-
-        if (!(mudur.getKullaniciAdi().equals(girilenKAdi) && mudur.getSifre() == girilenSifre)) {
-            int sayac = 2;
-            while (sayac > 0) {
-                System.out.println("HATALI GİRİŞ TEKRAR DENEYİNİZ!");
-                System.out.println("kalan hak " + sayac);
-                System.out.print("Kullanıcı Adı:");
-                girilenKAdi = scanner.nextLine();
-                System.out.print("Şifre:");
-                while(!scanner.hasNextInt()){
-                    System.out.print("Lütfen 4 basamaklı şifrenizi giriniz:");
-                    scanner.next();
-                }
-                girilenSifre = scanner.nextInt();
-                scanner.nextLine();
-
-                if (mudur.getKullaniciAdi().equals(girilenKAdi) && mudur.getSifre() == girilenSifre) {
-                    System.out.println("Depo Yönetim Sistemine Hoşgeldiniz☺️");
-                    return true;
-                }
-                sayac--;
-            }
-            System.out.println("SİSTEM GÜVENLİK SEBEBİ İLE KAPATILIYOR");
-            return false;
-        } else {
-            System.out.println("Depo Yönetim Sistemine Hoşgeldiniz☺️");
+    // YARDIMCI METOT
+    private boolean hakTukendiMi(int hak) {
+        if (hak <= 0) {
+            System.out.println("\n❌ Çok fazla hatalı deneme yaptınız!");
+            System.out.println("- Güvenlik sebebiyle işlem iptal edildi -");
             return true;
         }
+        return false;
+    }
+
+    // 1. YENİ MÜDÜR KAYDI (Kayıt Ol)
+
+    public void yeniMudurKaydi() {
+        System.out.println("\n=== YENİ YÖNETİCİ KAYIT EKRANI ===");
+
+        System.out.print("Belirlemek istediğiniz Kullanıcı Adı: ");
+        String kAdi = scanner.nextLine();
+
+        // Veritabanında bu isimde biri var mı kontrolü!
+        if (mudurDao.kullaniciAdiDahaOnceAlinmisMi(kAdi)) {
+            System.out.println("HATA! Bu kullanıcı adı zaten sistemde kayıtlı. Lütfen farklı bir isim seçin.");
+            return;
+        }
+
+        System.out.print("Belirlemek istediğiniz Şifre: ");
+        String sifre = scanner.nextLine(); // DÜZELTİLDİ: Artık nextInt() yok, String alıyoruz!
+
+        Mudur yeniMudur = new Mudur(kAdi, sifre);
+
+        if (mudurDao.mudurKaydet(yeniMudur)) {
+            System.out.println("✅ Başarılı! Yeni yönetici sisteme kaydedildi.");
+        } else {
+            System.out.println("❌ Kayıt sırasında veritabanı hatası oluştu!");
+        }
+    }
+
+    // 2. SİSTEME GİRİŞ YAP (Login)
+
+    public boolean sistemeGirisYap() {
+        int hak = 3; // 3 deneme hakkı
+
+        System.out.println("\n=== WMS PRO - SİSTEM GİRİŞİ ===");
+
+        // Eğer veritabanı bomboşsa, sistemi kitleme; direkt kayıt ekranına yönlendir
+        if (!mudurDao.mudurVarMi()) {
+            System.out.println("Sistemde kayıtlı hiçbir yönetici bulunamadı!");
+            System.out.println("Lütfen önce bir yönetici hesabı oluşturun.");
+            yeniMudurKaydi();
+            return false;
+        }
+
+        while (hak > 0) {
+            System.out.print("Kullanıcı Adı: ");
+            String kAdi = scanner.nextLine();
+
+            System.out.print("Şifre: ");
+            String sifre = scanner.nextLine();
+
+            // Dao üzerinden veritabanında sorgula
+            if (mudurDao.girisYap(kAdi, sifre)) {
+                System.out.println("\n✅ Giriş Başarılı! Sisteme hoş geldiniz, " + kAdi + ".");
+                return true; // Giriş izni verildi
+            } else {
+                hak--;
+                if (hakTukendiMi(hak)) return false;
+                System.out.println("❌ Kullanıcı adı veya şifre hatalı! Kalan hakkınız: " + hak + "\n");
+            }
+        }
+        return false; // Hak biterse false döner
     }
 }
