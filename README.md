@@ -41,11 +41,11 @@ Yazılım, özellikle **backend mimarisi** ve **veri bütünlüğü** odaklı ta
 ## 🖥 Uygulama Galerisi
 
 ### 📈 Operasyonel Dashboard
-> *[BURAYA DASHBOARD EKRAN GÖRÜNTÜSÜNÜ SÜRÜKLE BIRAK]*
+> <img width="1728" height="1117" alt="Ekran Resmi 2026-02-23 01 37 31" src="https://github.com/user-attachments/assets/3269ea3f-0c63-4cfc-ad4a-6f3489766878" />
 > *Depo doluluk oranlarını ve genel istatistikleri görselleştiren ana yönetim paneli.*
 
 ### 📦 Envanter Yönetim Merkezi
-> *[BURAYA ENVANTER LİSTESİ GÖRÜNTÜSÜNÜ SÜRÜKLE BIRAK]*
+> <img width="1728" height="1117" alt="Ekran Resmi 2026-02-23 01 37 10" src="https://github.com/user-attachments/assets/a6fffe97-d0e7-42a5-a44e-0cfd2e54e3f1" />
 > *Otomatik stok takibi ve dinamik kategorizasyon içeren modern veri tablosu.*
 
 ---
