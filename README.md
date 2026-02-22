@@ -1,81 +1,86 @@
-# 🏭 Depo Yönetim Sistemi (Warehouse Management System)
+<div align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/3252/3252119.png" width="120" height="120" alt="WMS Pro Logo">
+  <h1>🚀 WMS Pro: Endüstriyel Depo ve Lojistik Yönetim Sistemi</h1>
+  <p><strong>Yüksek Performanslı, Güvenli ve Ölçeklenebilir Envanter Çözümü</strong></p>
 
-> **Java ile geliştirilmiş, katmanlı mimari yapısına sahip, dosya tabanlı (File I/O) stok takip ve yönetim otomasyonu.**
-
-Bu proje, nesne yönelimli programlama (OOP) prensipleri gözetilerek; stok takibi, raf yönetimi ve yetkilendirme süreçlerini dijitalleştirmek amacıyla geliştirilmiştir. Veri kalıcılığı için özel bir dosya yönetim modülü kullanılarak veritabanı bağımsızlığı sağlanmıştır.
-
----
-
-## 🚀 Proje Mimarisi ve Teknik Detaylar
-
-Proje, **"Separation of Concerns" (İlgi Alanlarının Ayrımı)** ilkesine uygun olarak tasarlanmıştır. İş mantığı (Business Logic), Veri Erişimi (Data Access) ve Varlıklar (Entities) birbirinden soyutlanmıştır.
-
-### 🛠 Kullanılan Teknolojiler ve Yöntemler
-* **Programlama Dili:** Java (JDK 17+)
-* **Veri Kalıcılığı:** Java I/O (File Handling - `.txt` tabanlı veritabanı simülasyonu)
-* **Mimari Desen:** Manager Design Pattern (Yönetici Tasarım Deseni)
-* **Sürüm Kontrol:** Git & GitHub
+  <div>
+    <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java">
+    <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+    <img src="https://img.shields.io/badge/Mimari-DAO%20Pattern-orange?style=for-the-badge" alt="Mimari">
+    <img src="https://img.shields.io/badge/Arayüz-FlatLaf--Modern-blue?style=for-the-badge" alt="UI">
+  </div>
+</div>
 
 ---
 
-## ⚙️ Temel Fonksiyonlar (Features)
+## 🛠 Projeye Genel Bakış
 
-### 1. Ürün ve Stok Yönetimi (Inventory Management)
-* **CRUD İşlemleri:** Ürün ekleme, silme ve güncelleme işlemleri `UrunManager` sınıfı tarafından kontrol edilir.
-* **Benzersiz ID Takibi:** Her ürün sisteme benzersiz bir kimlik ile kaydedilir.
-* **Kategorizasyon:** Ürünler türlerine göre ayrıştırılarak yönetilebilir.
+**WMS Pro**, modern depo operasyonlarını hassasiyet ve güvenlikle optimize etmek için mühendislik prensipleriyle geliştirilmiş bir otomasyon sistemidir. Bu çalışma, basit veri kayıt işlemlerinin ötesine geçerek; karmaşık lojistik algoritmaları, çok katmanlı güvenlik protokolleri ve modern bir kullanıcı deneyimini (UX) bir araya getirir.
 
-### 2. Raf ve Lokasyon Yönetimi (Shelf Optimization)
-* **Akıllı Raf Atama:** Ürünlerin depodaki fiziksel konumları (`Raf` sınıfı) dijital ortamda eşleştirilir.
-* **Kapasite Kontrolü:** Rafların doluluk oranları anlık olarak hesaplanır ve hatalı yerleştirmeler engellenir.
-
-### 3. Yönetici ve Yetkilendirme (Admin & Auth)
-* **Güvenli Giriş:** `Mudur` ve `MudurManager` sınıfları üzerinden yetkili girişi doğrulaması yapılır.
-* **Operasyonel Yetki:** Kritik stok değişiklikleri sadece yetkili kullanıcılar tarafından yapılabilir.
-
-### 4. Raporlama ve I/O İşlemleri
-* **Persistance (Kalıcılık):** Program kapatılsa bile veriler `DosyaIslemleri` sınıfı sayesinde kaybolmaz.
-* **Listeleme:** Mevcut envanter durumu, `Listeleme` modülü ile detaylı olarak raporlanır.
+Yazılım, özellikle **backend mimarisi** ve **veri bütünlüğü** odaklı tasarımıyla, profesyonel standartlarda bir depo yönetim altyapısı sunmaktadır.
 
 ---
 
-## 📂 Sınıf Yapısı (Class Breakdown)
+## 🏗 Temel Mühendislik Sütunları
 
-Proje modüler bir yapıda geliştirilmiştir:
+### 🔐 Çok Katmanlı Güvenlik ve Doğrulama
+* **Brute-Force Koruması:** Yetkisiz erişimleri engellemek için deneme sınırı mantığıyla kurgulanmış giriş zırhı.
+* **Veri Sanitizasyonu:** Veritabanı işlemleri sırasında veri bozulmalarını önleyen gerçek zamanlı girdi doğrulama.
+* **Kritik İşlem Politikası:** Sistem kararlılığını korumak için kritik operasyonlarda uygulanan "7 Hata" sınırı mekanizması.
 
-| Sınıf / Paket | Açıklama |
-| :--- | :--- |
-| **`Main.java`** | Uygulamanın giriş noktasıdır. Menü navigasyonunu yönetir. |
-| **`Entity` (Varlıklar)** | `Urun`, `Raf`, `Mudur` sınıfları veri modellerini temsil eder (POJO). |
-| **`Manager` (İş Mantığı)** | `UrunManager`, `RafManager` gibi sınıflar veriler üzerindeki kuralları işletir. |
-| **`DosyaIslemleri`** | Verilerin `.txt` dosyalarına yazılmasını ve okunmasını sağlayan I/O katmanıdır. |
-| **`Listeleme`** | Kullanıcıya sunulan çıktıların formatlandığı yardımcı sınıftır. |
+### 🧠 Akıllı Lojistik Algoritmaları
+* **Dinamik Parçalı Dağıtım:** Mevcut raf kapasitesini aşan stoklar için sistemi kilitlemek yerine, ürünü boş lokasyonlara akıllıca paylaştıran dağıtım mantığı.
+* **Otomatik İndeks Kalibrasyonu:** Depolama birimleri değiştirildiğinde veya silindiğinde, veri kaybını önlemek için tüm ilişkili verileri otomatik olarak senkronize eden yapı.
+
+### 📊 Gelişmiş Veri Yönetimi
+* **Yüksek Hassasiyetli Loglama:** Her bir işlem, denetim izi oluşturmak amacıyla milisaniyelik hassasiyetle zaman damgalı olarak kaydedilir.
+* **Hibrit Arama Motoru:** Seri numarası takibi için "tam eşleşme" ile isim bazlı filtreleme için "esnek arama" mantığını birleştiren algoritma.
 
 ---
 
-## 💻 Kurulum ve Çalıştırma (Getting Started)
+## 🖥 Uygulama Galerisi
 
-Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyebilirsiniz:
+### 📈 Operasyonel Dashboard
+> *[BURAYA DASHBOARD EKRAN GÖRÜNTÜSÜNÜ SÜRÜKLE BIRAK]*
+> *Depo doluluk oranlarını ve genel istatistikleri görselleştiren ana yönetim paneli.*
 
-1.  **Repoyu Klonlayın:**
+### 📦 Envanter Yönetim Merkezi
+> *[BURAYA ENVANTER LİSTESİ GÖRÜNTÜSÜNÜ SÜRÜKLE BIRAK]*
+> *Otomatik stok takibi ve dinamik kategorizasyon içeren modern veri tablosu.*
+
+---
+
+## 🧰 Teknik Altyapı
+
+| Kategori | Teknoloji | Kullanım Amacı |
+| :--- | :--- | :--- |
+| **Dil** | Java 20+ | Çekirdek İş Mantığı ve OOP Standartları |
+| **Veritabanı** | MySQL | İlişkisel Veri Depolama ve Loglama |
+| **Arayüz** | Swing / FlatLaf | Donanım Hızlandırmalı Modern UI |
+| **Bağlantı** | JDBC Driver | Güvenli Veritabanı İletişimi |
+| **Tasarım Kalıbı** | DAO (Data Access Object) | Kod Sürdürülebilirliği ve Katmanlı Mimari |
+
+---
+
+## 🚀 Kurulum ve Çalıştırma
+
+1.  **Depoyu Klonlayın:**
     ```bash
-    git clone [https://github.com/KULLANICI_ADINIZ/WarehouseManagementSystem.git](https://github.com/KULLANICI_ADINIZ/WarehouseManagementSystem.git)
+    git clone [https://github.com/KULLANICI_ADIN/WMS-Pro.git](https://github.com/KULLANICI_ADIN/WMS-Pro.git)
     ```
-2.  **Projeyi IDE'de Açın:**
-    IntelliJ IDEA veya Eclipse kullanarak proje dizinini açın.
-3.  **SDK Kontrolü:**
-    Proje ayarlarından (Project Structure) Java SDK sürümünün seçili olduğundan emin olun.
-4.  **Çalıştırın:**
-    `src/Main.java` dosyasını çalıştırarak uygulamayı başlatın.
+2.  **Veritabanı Yapılandırması:** `depo_yonetim` şemasını MySQL üzerinde oluşturun. `DBHelper.java` dosyasını kendi yerel erişim bilgilerinizle güncelleyin.
+3.  **Giriş:**
+    * **Kullanıcı Adı:** `admin`
+    * **Şifre:** `123`
 
 ---
 
-## 🔜 Gelecek Hedefleri (Roadmap)
-* [ ] Veri tabanı entegrasyonu (MySQL veya PostgreSQL).
-* [ ] Grafiksel Kullanıcı Arayüzü (JavaFX veya Swing).
-* [ ] Detaylı Excel raporlama modülü.
-
----
-
-**Geliştirici:** [Ömer ÇELİK]
-*Yazılım Mühendisliği Öğrencisi*
+<div align="center">
+  <h3>Geliştirici İletişim</h3>
+  <p><b>Ömer Çelik</b><br>
+  Yazılım Mühendisliği Öğrencisi | Otomotiv Yazılımları ve Backend Geliştirici</p>
+  
+  <a href="https://linkedin.com/in/LINKEDIN_PROFIL_ADIN">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+  </a>
+</div>
